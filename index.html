@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Choerul Pajri — Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FAF7EF; --bg-soft:#F1EDDF; --ink:#221E17; --muted:#75705F;
+    --green:#33684E; --green-deep:#20443330; --green-soft:#E5EBDE;
+    --clay:#B0632F; --clay-soft:#F3E4D5; --line:#E4DDC9; --white:#FFFFFF;
+    --sans:'Inter',sans-serif; --serif:'Newsreader',serif;
+    box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+  }
+  *{box-sizing:inherit;margin:0;padding:0}
+  html{scroll-behavior:smooth;scroll-padding-top:env(safe-area-inset-top,0px)}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.65;font-size:17px;-webkit-font-smoothing:antialiased}
+  a{color:inherit}
+  .wrap{max-width:900px;margin:0 auto;padding:0 24px}
+  section{padding:84px 0}
+  @media (max-width:640px){ section{padding:56px 0} }
+  h1,h2,h3{font-family:var(--serif);font-weight:600;letter-spacing:-0.01em;line-height:1.14}
+  p{color:var(--muted)}
+
+  nav{position:sticky;top:0;top:env(safe-area-inset-top,0px);z-index:10;background:rgba(250,247,239,.88);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  nav .wrap{display:flex;align-items:center;justify-content:space-between;padding:18px 24px}
+  .brand{font-family:var(--serif);font-weight:600;font-size:19px}
+  .navlinks{display:flex;gap:26px;font-size:14.5px}
+  .navlinks a{text-decoration:none;color:var(--muted);position:relative;padding-bottom:3px}
+  .navlinks a::after{content:"";position:absolute;left:0;right:100%;bottom:0;height:1px;background:var(--green);transition:right .2s ease}
+  .navlinks a:hover::after{right:0}
+  .navlinks a:hover{color:var(--ink)}
+  @media (max-width:560px){ .navlinks{gap:15px;font-size:13.5px} }
+
+  /* hero */
+  .hero{position:relative;overflow:hidden;padding-top:68px;padding-bottom:0}
+  .hero .wrap{position:relative;display:grid;grid-template-columns:1fr 240px;gap:48px;align-items:center}
+  @media (max-width:760px){ .hero .wrap{grid-template-columns:1fr;justify-items:start} }
+  .hero-text{grid-column:1}
+  @media (max-width:760px){ .hero-text{order:2} }
+
+  .photo-frame{
+    grid-column:2;grid-row:1;justify-self:end;position:relative;width:230px;height:290px;
+    border-radius:4px;overflow:hidden;background:var(--white);
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;
+    padding:14px 14px 34px 14px;
+    transform:rotate(-5deg);
+    box-shadow:0 18px 34px -14px rgba(34,30,23,.35), -12px 14px 0 -2px var(--clay-soft);
+  }
+  .photo-frame .pic{position:relative;width:100%;height:100%;border-radius:2px;overflow:hidden;background:var(--green-soft);display:flex;align-items:center;justify-content:center}
+  @media (max-width:760px){ .photo-frame{order:1;justify-self:start;width:168px;height:212px;padding:10px 10px 26px 10px;transform:rotate(-4deg);box-shadow:0 14px 26px -12px rgba(34,30,23,.35), -8px 10px 0 -2px var(--clay-soft)} }
+  .photo-fallback{font-family:var(--serif);font-size:56px;font-weight:600;color:var(--green)}
+  .photo-frame img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .cap{position:absolute;bottom:10px;left:0;right:0;text-align:center;font-size:12px;color:var(--muted)}
+
+  .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:14px;color:var(--green);font-weight:500}
+  .eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--clay)}
+  h1.hero-h{font-size:clamp(36px,6vw,58px);max-width:13ch;margin-top:16px;font-style:italic}
+  h1.hero-h .plain{font-style:normal}
+  .hero-sub{font-size:19px;max-width:46ch;margin-top:20px}
+  .hero-btns{display:flex;gap:14px;flex-wrap:wrap;margin-top:34px}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:13px 24px;border-radius:8px;font-weight:500;font-size:15px;text-decoration:none;transition:transform .15s ease, box-shadow .15s ease}
+  .btn:hover{transform:translateY(-1px)}
+  .btn-solid{background:var(--ink);color:var(--white)}
+  .btn-solid:hover{box-shadow:0 6px 16px -6px rgba(34,30,23,.4)}
+  .btn-ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
+  .btn-ghost:hover{border-color:var(--green);color:var(--green)}
+
+  .stats{display:flex;gap:36px;margin-top:60px;padding-top:32px;border-top:1px solid var(--line);flex-wrap:wrap}
+  .stat b{font-family:var(--serif);font-size:28px;font-weight:600;display:block;color:var(--ink)}
+  .stat span{font-size:13.5px;color:var(--muted)}
+
+  /* about */
+  .kicker{font-size:14px;font-weight:600;color:var(--green);margin-bottom:12px}
+  h2{font-size:clamp(27px,4vw,33px)}
+  .about p{max-width:64ch;margin-top:18px;font-size:17px}
+  .about strong{color:var(--ink);font-weight:600}
+
+  /* projects */
+  .project{padding:44px 0;border-top:1px solid var(--line);display:grid;grid-template-columns:1fr;gap:0}
+  .project:last-child{border-bottom:1px solid var(--line)}
+  .tag{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:500;padding:5px 14px 5px 10px;border-radius:99px;margin-bottom:16px}
+  .tag::before{content:"";width:6px;height:6px;border-radius:50%}
+  .tag-skripsi{background:var(--green-soft);color:var(--green)}
+  .tag-skripsi::before{background:var(--green)}
+  .tag-pribadi{background:var(--clay-soft);color:var(--clay)}
+  .tag-pribadi::before{background:var(--clay)}
+  .project h3{font-size:24px}
+  .project p{margin-top:14px;max-width:60ch;font-size:16.5px}
+  .chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:20px}
+  .chip{background:var(--white);color:var(--ink);font-size:13.5px;font-weight:500;padding:7px 14px;border-radius:7px;border:1px solid var(--line)}
+
+  /* skills */
+  .skillgroup{margin-top:34px}
+  .skillgroup h3{font-size:16.5px;font-weight:600;margin-bottom:13px;font-family:var(--sans);color:var(--ink)}
+  .chips.big .chip{font-size:14.5px;padding:9px 16px}
+
+  /* contact */
+  .contact-panel{background:var(--green);border-radius:24px;padding:60px 44px;text-align:center;position:relative;overflow:hidden}
+  .contact-panel::before{content:"";position:absolute;top:-60px;right:-60px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.06)}
+  .contact-panel h2,.contact-panel p{color:var(--white);position:relative}
+  .contact-panel p{opacity:.8;max-width:44ch;margin:16px auto 0}
+  .contact-panel h2{max-width:16ch;margin:0 auto}
+  @media (max-width:640px){ .contact-panel{padding:44px 24px} }
+  .contact-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:32px;position:relative}
+  .contact-btns .btn-solid{background:var(--white);color:var(--ink)}
+  .contact-btns .btn-ghost{border-color:rgba(255,255,255,.35);color:var(--white)}
+  .contact-btns .btn-ghost:hover{border-color:var(--white);color:var(--white)}
+
+  footer{padding:34px 0;text-align:center}
+  footer p{font-size:14px}
+
+  @media (prefers-reduced-motion:reduce){ * {transition:none!important} }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <span class="brand">Choerul Pajri</span>
+    <div class="navlinks">
+      <a href="#tentang">Tentang</a>
+      <a href="#proyek">Proyek</a>
+      <a href="#keahlian">Keahlian</a>
+      <a href="#kontak">Kontak</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="hero-text">
+      <span class="eyebrow"><span class="dot"></span>Fresh graduate — Sistem Informasi</span>
+      <h1 class="hero-h">Halo, saya <span class="plain">Choerul Pajri</span></h1>
+      <p class="hero-sub">Tertarik pada pengembangan website, perancangan sistem, database, dan UI/UX. Terbiasa mengerjakan project mulai dari analisis kebutuhan, pemodelan UML, perancangan database, pembuatan antarmuka, sampai implementasi dan pengujian.</p>
+      <div class="hero-btns">
+        <a href="#proyek" class="btn btn-solid">Lihat proyek saya</a>
+        <a href="mailto:pajrichoerul@gmail.com" class="btn btn-ghost">Kirim email</a>
+      </div>
+    </div>
+    <div class="photo-frame">
+      <div class="pic">
+        <span class="photo-fallback">CP</span>
+        <img src="foto.jpeg" alt="Foto Choerul Pajri" onerror="this.style.display='none'">
+      </div>
+      <span class="cap">Choerul Pajri</span>
+    </div>
+  </div>
+  <div class="wrap">
+    <div class="stats">
+      <div class="stat"><b>3+</b><span>project utama</span></div>
+      <div class="stat"><b>UNIKOM</b><span>S1 Sistem Informasi</span></div>
+      <div class="stat"><b>Web & UI/UX</b><span>fokus pengembangan</span></div>
+    </div>
+  </div>
+</header>
+
+<section id="tentang">
+  <div class="wrap about">
+    <div class="kicker">Tentang saya</div>
+    <h2>Suka mengubah kebutuhan menjadi sistem yang bisa digunakan</h2>
+    <p>Saya Choerul Pajri, fresh graduate S1 Sistem Informasi dari Universitas Komputer Indonesia (UNIKOM). Saya memiliki ketertarikan pada pengembangan website, analisis sistem, perancangan database, dan UI/UX.</p>
+    <p>Saya terbiasa mengerjakan project dari tahap memahami kebutuhan pengguna, membuat UML dan rancangan database, membangun antarmuka, sampai implementasi dan pengujian. Saya juga nyaman mempelajari teknologi baru dan menggunakan tools digital untuk membantu proses kerja menjadi lebih efektif.</p>
+  </div>
+</section>
+
+<section id="proyek">
+  <div class="wrap">
+    <div class="kicker">Proyek</div>
+    <h2>Yang sudah saya kerjakan</h2>
+
+    <div class="project">
+      <span class="tag tag-skripsi">Skripsi</span>
+      <h3>CD 133 Production</h3>
+      <p>Sistem informasi penjualan berbasis web untuk jasa konveksi CD 133 Production. Sistem dirancang untuk membantu proses pemesanan, verifikasi pembayaran, update status, tracking pesanan, proses produksi, serta laporan penjualan.</p>
+      <p>Saya mengerjakan analisis kebutuhan, pemodelan UML, perancangan database, UI, implementasi dan pengujian menggunakan pendekatan Waterfall.</p>
+      <div class="chips">
+        <span class="chip">PHP Native</span><span class="chip">MySQL</span><span class="chip">PDO</span><span class="chip">JavaScript</span><span class="chip">HTML/CSS</span><span class="chip">UML</span>
+      </div>
+    </div>
+
+    <div class="project">
+      <span class="tag tag-skripsi">Proyek Magang</span>
+      <h3>BBSPJIT — Sistem Pendaftaran Magang</h3>
+      <p>Project saat magang di BBSPJIT Subtim Umum untuk mendukung proses pendaftaran peserta magang dan pengelolaan dokumen secara lebih terstruktur. Sistem dibuat agar proses pengumpulan dan pengelolaan berkas peserta lebih mudah dilakukan secara digital.</p>
+      <p>Saya terlibat dalam pengembangan aplikasi web dan pengelolaan data serta dokumen menggunakan teknologi web modern.</p>
+      <div class="chips">
+        <span class="chip">Next.js 15</span><span class="chip">Tailwind CSS</span><span class="chip">Supabase</span><span class="chip">Database</span><span class="chip">File Storage</span>
+      </div>
+    </div>
+
+    <div class="project">
+      <span class="tag tag-pribadi">Proyek pribadi</span>
+      <h3>Momo's Memory</h3>
+      <p>Konsep produk boneka dengan QR code yang terhubung ke website memory gallery. Pengguna dapat menyimpan dan menampilkan foto-foto kenangan melalui halaman web yang dibuat khusus untuk setiap produk.</p>
+      <div class="chips">
+        <span class="chip">PHP</span><span class="chip">MySQL</span><span class="chip">UI/UX</span><span class="chip">QR Code</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="keahlian">
+  <div class="wrap">
+    <div class="kicker">Keahlian</div>
+    <h2>Tools & kemampuan yang saya gunakan</h2>
+
+    <div class="skillgroup">
+      <h3>Programming & Web Development</h3>
+      <div class="chips big">
+        <span class="chip">PHP</span><span class="chip">JavaScript</span><span class="chip">HTML</span><span class="chip">CSS</span><span class="chip">Java</span><span class="chip">C</span><span class="chip">Node.js</span><span class="chip">React</span>
+      </div>
+    </div>
+    <div class="skillgroup">
+      <h3>Database</h3>
+      <div class="chips big">
+        <span class="chip">MySQL</span><span class="chip">Oracle</span><span class="chip">phpMyAdmin</span>
+      </div>
+    </div>
+    <div class="skillgroup">
+      <h3>System Analysis & Design</h3>
+      <div class="chips big">
+        <span class="chip">UML</span><span class="chip">Data Analysis</span><span class="chip">UI/UX</span><span class="chip">Figma</span><span class="chip">Canva</span>
+      </div>
+    </div>
+    <div class="skillgroup">
+      <h3>Tools & lainnya</h3>
+      <div class="chips big">
+        <span class="chip">Git / GitHub</span><span class="chip">Microsoft Office</span><span class="chip">Blender Dasar</span><span class="chip">Social Media Management</span><span class="chip">AI Tools</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="kontak">
+  <div class="wrap">
+    <div class="contact-panel">
+      <h2>Ada proyek yang mau dibicarakan?</h2>
+      <p>Saya terbuka buat ngobrol soal magang, kerja sama proyek, atau sekadar diskusi soal sistem informasi.</p>
+      <div class="contact-btns">
+        <a href="mailto:pajrichoerul@email.com" class="btn btn-solid">pajrichoerul@email.com</a>
+        <a href="https://github.com/choerulpajri-spec" class="btn btn-ghost">GitHub</a>
+        <a href="https://www.linkedin.com/in/choerul-pajri-6693a12b9/" class="btn btn-ghost">LinkedIn</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>Choerul Pajri · Sistem Informasi, UNIKOM · 2026</p>
+  </div>
+</footer>
+
+</body>
+</html>
