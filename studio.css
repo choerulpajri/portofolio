@@ -20,7 +20,7 @@ body::before{
   background:
     radial-gradient(900px 620px at 88% -6%,rgba(139,92,246,.17),transparent 62%),
     radial-gradient(760px 520px at -4% 46%,rgba(91,33,182,.13),transparent 62%),
-    radial-gradient(rgba(196,181,253,.2) 1px,transparent 1.35px) 0 0/26px 26px;
+    radial-gradient(rgba(196,181,253,.11) 1px,transparent 1.35px) 0 0/28px 28px;
   transition:opacity 1.3s ease;
 }
 
@@ -37,18 +37,18 @@ header.hero,main>section,body>footer{
 
 .st-frame-tag{
   position:absolute;left:clamp(16px,2.4vw,30px);top:0;transform:translateY(-50%);z-index:5;
-  display:flex;align-items:center;gap:10px;padding:6px 12px 6px 10px;border-radius:9px;
-  background:#171222;border:1px solid var(--st-line-2);box-shadow:0 8px 24px rgba(0,0,0,.45);
+  display:flex;align-items:center;gap:10px;padding:5px 11px 5px 9px;border-radius:8px;
+  background:#171222;border:1px solid var(--st-line);box-shadow:none;
   font:600 12px/1 var(--body);color:#ece4ff;white-space:nowrap;pointer-events:none;letter-spacing:0
 }
 .st-frame-tag b{display:inline-flex;align-items:center;gap:8px;font-weight:600}
 .st-frame-tag b::before{content:"";width:10px;height:10px;border:1.5px solid var(--st-lav);border-radius:2px;background:linear-gradient(var(--st-lav),var(--st-lav)) center/3px 3px no-repeat}
-.st-frame-tag i{font-style:normal;font-weight:500;color:#8f84a6;font-variant-numeric:tabular-nums}
+.st-frame-tag i{display:none}
 .st-frame-tag i:empty{display:none}
 
 /* ---------- tipografi ---------- */
 h1,h2,h3{font-family:var(--display)}
-h2{font-size:clamp(30px,4.2vw,56px);line-height:1;letter-spacing:-.05em;font-weight:800;color:#fff}
+h2{font-size:clamp(28px,3.6vw,44px);line-height:1.08;letter-spacing:-.035em;font-weight:800;color:#fff}
 .lead,.lead-light{color:var(--st-mute);font-size:17px;max-width:58ch}
 .link{color:var(--st-lav);text-decoration-thickness:1px;text-decoration-color:rgba(196,181,253,.5);text-underline-offset:5px}
 .link:hover{color:#fff;text-decoration-color:#fff}
@@ -91,7 +91,7 @@ nav .wrap{
     var(--st-frame)!important;
 }
 .hero::before{background-size:52px 52px;opacity:.5}
-h1{font-size:clamp(38px,6.1vw,86px);line-height:.95;letter-spacing:-.058em;font-weight:800;color:#fff}
+h1{font-size:clamp(34px,5vw,64px);line-height:1.04;letter-spacing:-.04em;font-weight:800;color:#fff}
 h1 span:nth-child(2),h1 span:nth-child(3){padding-left:0}
 .rolepick-label{text-transform:none!important;letter-spacing:0!important;font-size:13px!important;color:var(--st-mute)!important;font-weight:500}
 .rp{border-radius:12px;padding:11px 15px;border:1px solid var(--st-line-2);background:rgba(196,181,253,.04)}
@@ -100,39 +100,23 @@ h1 span:nth-child(2),h1 span:nth-child(3){padding-left:0}
 .rp-sub{font-size:12.5px;color:var(--st-mute)}
 .rp[aria-current="true"]{background:rgba(139,92,246,.22);border-color:var(--st-lav);box-shadow:0 0 0 3px rgba(139,92,246,.18);color:#fff}
 .rp[aria-current="true"] .rp-sub{color:#cfc6e0}
-\.hero-sub{font-size:18px;line-height:1.6;max-width:50ch;color:#c9c0da}
-
-/* kotak seleksi di sekeliling judul + tag kursor */
-.hero-text h1{position:relative;width:fit-content;max-width:100%}
-.hero-text h1::before{content:"";position:absolute;inset:-14px -20px -16px;z-index:-1;border:1px solid var(--st-violet);border-radius:4px;background:rgba(139,92,246,.05);pointer-events:none}
-.hero-text h1::after{
-  content:"";position:absolute;inset:-18px -24px -20px;pointer-events:none;
-  background:
-    linear-gradient(#fff,#fff) 0 0/8px 8px no-repeat,
-    linear-gradient(#fff,#fff) 100% 0/8px 8px no-repeat,
-    linear-gradient(#fff,#fff) 0 100%/8px 8px no-repeat,
-    linear-gradient(#fff,#fff) 100% 100%/8px 8px no-repeat
-}
-h1 .st-cursor{position:absolute;right:-34px;bottom:-54px;display:flex;align-items:flex-start;padding:0;letter-spacing:0;font:600 12px/1 var(--body);pointer-events:none;filter:drop-shadow(0 6px 14px rgba(0,0,0,.55))}
-.st-cursor svg{width:20px;height:24px;flex:none}
-.st-cursor path{fill:var(--st-lav);stroke:#fff;stroke-width:1.3;stroke-linejoin:round}
-.st-cursor em{margin:19px 0 0 -4px;padding:5px 10px;border-radius:7px;background:var(--st-lav);color:#10091c;font-style:normal;font-weight:700}
+.hero-text{display:flex;flex-direction:column;align-items:flex-start}
+.hero-sub{font-size:17.5px;line-height:1.65;max-width:52ch;color:#d0c8e0}
+.hero-text .rolepick{order:9;width:100%;margin:30px 0 0;padding-top:22px;border-top:1px solid var(--st-line)}
 
 /* ---------- ringkasan untuk rekruter ---------- */
-.rc-grid{grid-template-columns:1.35fr 1fr 1fr;gap:16px}
+.rc-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
 .rc-card{background:var(--st-raise);border:1px solid var(--st-line);border-radius:18px;box-shadow:none}
-.rc-card:first-child{background:linear-gradient(160deg,rgba(139,92,246,.26),rgba(20,16,31,.96) 58%);border-color:rgba(196,181,253,.4)}
 .rc-big{font:700 clamp(20px,2.1vw,26px)/1.18 var(--display);letter-spacing:-.035em;color:#fff;margin:12px 0 4px}
-.rc-list{list-style:none;padding:0;margin-top:14px;display:grid;gap:9px;font-size:14.5px;line-height:1.55;color:var(--st-mute)}
-.rc-list li{position:relative;padding-left:20px;font-size:14.5px;color:var(--st-mute)}
+.rc-list{list-style:none;padding:0;margin-top:14px;display:grid;gap:10px;font-size:15.5px;line-height:1.55;color:#c3b9d6}
+.rc-list li{position:relative;padding-left:20px;font-size:15.5px;color:#c3b9d6}
 .rc-list li::before{content:"";position:absolute;left:0;top:.6em;width:7px;height:7px;border:0;border-radius:2px;background:var(--st-lav);transform:none}
 .rc-link{color:var(--st-lav);font-size:14px;text-decoration-thickness:1px;text-underline-offset:5px}
 .rc-link:hover{color:#fff}
 
 /* ---------- tentang ---------- */
 .about .wrap{grid-template-columns:minmax(0,5fr) minmax(0,6fr)}
-.about h2{position:sticky;top:104px;align-self:start}
-.about p{color:var(--st-mute);font-size:17px;line-height:1.7}
+.about p{color:#c3b9d6;font-size:16.5px;line-height:1.7}
 .about p strong{color:#fff}
 .facts{border-top:1px solid var(--st-line);margin-top:36px}
 .facts div{grid-template-columns:140px 1fr;border-bottom:1px solid var(--st-line)}
@@ -140,15 +124,12 @@ h1 .st-cursor{position:absolute;right:-34px;bottom:-54px;display:flex;align-item
 .facts dd{color:#d2c9e3}
 
 /* ---------- keahlian: tata letak bento ---------- */
-.skillgrid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:14px}
-.skill-card{grid-column:span 2;display:flex;flex-direction:column;background:var(--st-raise);border:1px solid var(--st-line);border-radius:18px;box-shadow:none}
-.skill-card:nth-child(1),.skill-card:nth-child(4){grid-column:span 4}
-.skill-card:nth-child(5),.skill-card:nth-child(6){grid-column:span 3}
-.skill-card:nth-child(1){background:linear-gradient(150deg,rgba(139,92,246,.2),rgba(20,16,31,.96) 60%)}
+.skillgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.skill-card{display:flex;flex-direction:column;background:var(--st-raise);border:1px solid var(--st-line);border-radius:18px;box-shadow:none}
 .skill-card h3{font:700 clamp(19px,1.9vw,24px)/1.18 var(--display);letter-spacing:-.035em;color:#fff}
-.skill-card .sk-plain{margin-top:10px;font-size:15px;line-height:1.55;color:var(--st-mute)}
+.skill-card .sk-plain{margin-top:10px;font-size:15.5px;line-height:1.6;color:#c3b9d6}
 .sk-tools{margin-top:auto;padding-top:18px;gap:7px}
-.sk-tools li,.sk-legend li{font-size:12.5px;display:inline-flex;align-items:center;gap:8px;padding:6px 11px;border-radius:7px;color:#e3d9fb}
+.sk-tools li,.sk-legend li{font-size:13px;display:inline-flex;align-items:center;gap:8px;padding:6px 11px;border-radius:7px;color:#e3d9fb}
 .sk-tools li::before,.sk-legend li::before{content:"";width:7px;height:7px;border-radius:50%;flex:none;font-size:0}
 li.lv-used::before{background:var(--st-lav);box-shadow:0 0 10px rgba(196,181,253,.8)}
 li.lv-learn::before{background:linear-gradient(90deg,var(--st-lav) 50%,transparent 50%);border:1px solid var(--st-lav)}
@@ -158,26 +139,16 @@ li.lv-now::before{background:transparent;border:1.5px dashed var(--st-mint)}
 .project{grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);border-top:1px solid var(--st-line)}
 .project:last-child{border-bottom:0}
 .project:nth-of-type(even) .p-text{order:2}
-.project h3{font-size:clamp(28px,3.6vw,44px);letter-spacing:-.05em;line-height:1.02;color:#fff}
-.project p{color:var(--st-mute);font-size:16.5px;line-height:1.65}
+.project h3{font-size:clamp(26px,3vw,36px);letter-spacing:-.035em;line-height:1.1;color:#fff}
+.project p{color:#c3b9d6;font-size:16px;line-height:1.65}
 .role{color:var(--st-lav)!important;font-size:15px}
 .tag-pill{border-radius:7px;font-size:12.5px;padding:5px 11px}
 .t-skripsi,.t-bisnis{background:rgba(139,92,246,.24);color:#e4d9ff;border:1px solid rgba(196,181,253,.35)}
 .t-magang{background:rgba(126,231,192,.12);color:#a6f0d5;border:1px solid rgba(126,231,192,.3)}
 .t-pribadi{background:rgba(240,171,252,.13);color:#f6cffd;border:1px solid rgba(240,171,252,.3)}
 .t-lingkungan{background:rgba(126,231,192,.12);color:#a6f0d5;border:1px solid rgba(126,231,192,.3)}
-.chips li{font-size:12.5px;padding:5px 11px}
+.chips li{font-size:13px;padding:5px 11px}
 
-.p-visual{position:relative}
-.p-visual::before{content:"";position:absolute;inset:-12px;border:1px dashed rgba(196,181,253,.4);border-radius:10px;pointer-events:none}
-.p-visual::after{
-  content:"";position:absolute;inset:-16px;pointer-events:none;
-  background:
-    linear-gradient(#fff,#fff) 0 0/8px 8px no-repeat,
-    linear-gradient(#fff,#fff) 100% 0/8px 8px no-repeat,
-    linear-gradient(#fff,#fff) 0 100%/8px 8px no-repeat,
-    linear-gradient(#fff,#fff) 100% 100%/8px 8px no-repeat
-}
 .win{background:var(--st-raise);border:1px solid var(--st-line-2);border-radius:16px;box-shadow:0 36px 90px -34px rgba(0,0,0,.9);overflow:hidden}
 .win-bar{background:#181223;border-bottom:1px solid var(--st-line);color:#bfb5d2;font-weight:500}
 .win-bar i{width:9px;height:9px;border:0;background:var(--st-lav)}
@@ -185,7 +156,7 @@ li.lv-now::before{background:transparent;border:1.5px dashed var(--st-mint)}
 .win-bar i:nth-child(3){background:var(--st-mint)}
 .hl li{border-bottom:1px solid var(--st-line)}
 .hl b{color:#fff;background:linear-gradient(transparent 66%,rgba(139,92,246,.6) 66%)}
-.hl span{color:var(--st-mute)}
+.hl span{color:#c3b9d6;font-size:15px}
 
 /* ---------- proses & metode ---------- */
 .process{background:#100c1d!important}
@@ -209,7 +180,7 @@ li.lv-now::before{background:transparent;border:1.5px dashed var(--st-mint)}
     radial-gradient(620px 300px at 0% 0%,rgba(76,29,149,.32),transparent 62%),
     var(--st-frame)!important;
 }
-.contact h2{font-size:clamp(40px,7vw,96px);letter-spacing:-.06em;line-height:.94;max-width:14ch}
+.contact h2{font-size:clamp(34px,5.2vw,64px);letter-spacing:-.04em;line-height:1.04;max-width:18ch}
 .contact p{color:#c9c0da;font-size:18px}
 .contact-links a{color:#efe9ff;text-decoration-thickness:1px;text-underline-offset:6px}
 .contact-links a:hover{color:var(--st-lav)}
@@ -218,34 +189,24 @@ body>footer{padding:26px 0;border-radius:20px;color:var(--st-mute);font-size:14p
 
 /* ---------- responsif ---------- */
 @media(max-width:1000px){
-  .skillgrid{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .skill-card,.skill-card:nth-child(n){grid-column:span 1}
-  .skill-card:nth-child(1){grid-column:span 2}
-  .rc-grid{grid-template-columns:1fr 1fr}
-  .rc-card:first-child{grid-column:1/-1}
+  .skillgrid,.rc-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 @media(max-width:900px){
   .hero .wrap{grid-template-columns:1fr}
-  .about h2{position:static}
-  .hero-text h1::before{inset:-10px -12px -12px}
-  .hero-text h1::after{inset:-14px -16px -16px}
 }
 @media(max-width:860px){
   .project{grid-template-columns:1fr}
   .project:nth-of-type(even) .p-text{order:0}
-  .p-visual{margin:12px 12px 0}
-}
+  }
 @media(max-width:700px){
   :root{--st-pad:10px;--st-r:18px}
   nav .wrap{height:54px;padding:0 8px 0 14px}
   .st-frame-tag{font-size:11px;padding:5px 10px 5px 8px}
   .st-frame-tag i{display:none}
   .rc-grid,.skillgrid{grid-template-columns:1fr}
-  .skill-card,.skill-card:nth-child(n){grid-column:auto}
   .contact h2{font-size:clamp(36px,11vw,52px)}
 }
 @media(max-width:520px){
-  h1 .st-cursor{display:none}
   .facts div{grid-template-columns:1fr;gap:2px}
 }
 @media(prefers-reduced-motion:reduce){body::before{transition:none}}
