@@ -16,9 +16,9 @@ const easeInOut = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 const linear = t => t;
 
 const M = 16;                                   // margin clip supaya bayangan/outline tidak terpotong
-const COLORS = ['#c4b5fd', '#7ee7c0', '#f0abfc', '#fcd34d'];
+const COLORS = ['#c4b5fd', '#7ee7c0', '#f0abfc', '#fcd34d', '#fb923c'];
 const LABEL = { shell: 'MEMBUAT BAGIAN', text: 'MENULIS TEKS', media: 'MENAMPILKAN GAMBAR', block: 'MEMBANGUN LAYOUT' };
-const AGENTS = innerWidth < 700 ? 3 : 4;
+const AGENTS = innerWidth < 700 ? 3 : 5;
 
 const UNIT_SEL = [
   'nav .brand', 'nav .roleswitch', 'nav .navlinks', 'nav .navtoggle',
@@ -163,7 +163,7 @@ function prepare() {
     });
   });
   totalUnits = jobs.length + shells.length;
-  speed = clamp(totalUnits / 120, 1, 1.4);
+  speed = 1;
 }
 
 /* ---------- geometri + gambar ---------- */
@@ -190,7 +190,7 @@ function paint(el, kind, p, g, multi) {
 async function build(agent, el, kind, multi) {
   agent.say(LABEL[kind]);
   const from = [agent.x, agent.y];
-  await tween(150, easeOut, t => { const s = startPt(el, kind); agent.place(lerp(from[0], s[0], t), lerp(from[1], s[1], t)); });
+  await tween(190, easeOut, t => { const s = startPt(el, kind); agent.place(lerp(from[0], s[0], t), lerp(from[1], s[1], t)); });
   if (aborted) return;
 
   const g0 = measure(el);
@@ -202,10 +202,10 @@ async function build(agent, el, kind, multi) {
   agent.frame.className = 'sw-frame sw-ui on' + (kind === 'shell' ? ' line' : '');
   agent.down(true);
   ripple(s0[0], s0[1], agent.color, false);
-  await tween(60, linear, () => { const q = startPt(el, kind); agent.place(q[0], q[1]); });
+  await tween(80, linear, () => { const q = startPt(el, kind); agent.place(q[0], q[1]); });
   if (aborted) return;
 
-  const dur = kind === 'text' ? 165 + Math.min(g0.w, 700) * .14 : (kind === 'shell' ? 290 : 240);
+  const dur = kind === 'text' ? 230 + Math.min(g0.w, 700) * .2 : (kind === 'shell' ? 400 : 330);
   await tween(dur, easeInOut, p => {
     const g = measure(el);
     let fw, fh, ft = g.t, cx, cy;
@@ -245,7 +245,7 @@ async function waitInView(el) {
 }
 
 async function worker(agent, i) {
-  await sleep(i * 160);
+  await sleep(i * 200);
   if (aborted) return;
   agent.node.classList.add('on');
   while (!aborted && next < jobs.length) {
@@ -321,7 +321,7 @@ async function run() {
   addEventListener('wheel', blockScroll, { passive: false });
   addEventListener('touchmove', blockScroll, { passive: false });
   addEventListener('keydown', onKey);
-  setTimeout(() => { if (!cleaned) skip(); }, 40000);   // jaring pengaman
+  setTimeout(() => { if (!cleaned) skip(); }, 70000);   // jaring pengaman
 
   await sleep(520);                                      // layar benar-benar kosong sebentar
   if (aborted) return;
