@@ -163,7 +163,7 @@ function prepare() {
     });
   });
   totalUnits = jobs.length + shells.length;
-  speed = clamp(totalUnits / 70, 1, 2.4);
+  speed = clamp(totalUnits / 120, 1, 1.4);
 }
 
 /* ---------- geometri + gambar ---------- */
@@ -190,7 +190,7 @@ function paint(el, kind, p, g, multi) {
 async function build(agent, el, kind, multi) {
   agent.say(LABEL[kind]);
   const from = [agent.x, agent.y];
-  await tween(120, easeOut, t => { const s = startPt(el, kind); agent.place(lerp(from[0], s[0], t), lerp(from[1], s[1], t)); });
+  await tween(150, easeOut, t => { const s = startPt(el, kind); agent.place(lerp(from[0], s[0], t), lerp(from[1], s[1], t)); });
   if (aborted) return;
 
   const g0 = measure(el);
@@ -202,10 +202,10 @@ async function build(agent, el, kind, multi) {
   agent.frame.className = 'sw-frame sw-ui on' + (kind === 'shell' ? ' line' : '');
   agent.down(true);
   ripple(s0[0], s0[1], agent.color, false);
-  await tween(45, linear, () => { const q = startPt(el, kind); agent.place(q[0], q[1]); });
+  await tween(60, linear, () => { const q = startPt(el, kind); agent.place(q[0], q[1]); });
   if (aborted) return;
 
-  const dur = kind === 'text' ? 130 + Math.min(g0.w, 700) * .12 : (kind === 'shell' ? 230 : 190);
+  const dur = kind === 'text' ? 165 + Math.min(g0.w, 700) * .14 : (kind === 'shell' ? 290 : 240);
   await tween(dur, easeInOut, p => {
     const g = measure(el);
     let fw, fh, ft = g.t, cx, cy;
@@ -245,7 +245,7 @@ async function waitInView(el) {
 }
 
 async function worker(agent, i) {
-  await sleep(i * 120);
+  await sleep(i * 160);
   if (aborted) return;
   agent.node.classList.add('on');
   while (!aborted && next < jobs.length) {
