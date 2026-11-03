@@ -17,8 +17,8 @@ const linear = t => t;
 
 /* ---- pengaturan tempo (ms) ---- */
 const T = { move: 210, press: 65, block: 320, shell: 330, textBase: 200, flash: 140, stagger: 130, blank: 300 };
-const SCROLL_SPEED = 820;       // px/detik; intro lebih cepat mencapai elemen berikutnya
-const SCROLL_SMOOTH = 2.8;
+const SCROLL_SPEED = 460;       // auto-scroll lebih pelan agar proses yang sedang dibangun tetap terlihat
+const SCROLL_SMOOTH = 2.0;
 const LOW_POWER = (navigator.hardwareConcurrency || 4) <= 4 || (navigator.deviceMemory || 4) <= 4;
 const FX_SKIP = LOW_POWER ? 2 : 1; // efek canvas dirender lebih jarang pada perangkat terbatas
 
@@ -180,7 +180,7 @@ function stepScroll(dt) {
   if (Math.abs(scrollY - sy) > 3) sy = scrollY;
   const max = Math.max(0, root.scrollHeight - innerHeight);
   const top = geo(j).t;
-  const anchor = innerHeight * .3;
+  const anchor = innerHeight * .62; // pertahankan elemen aktif di area tengah-bawah layar
   if (top <= anchor) return;
   const diff = clamp(scrollY + top - anchor, 0, max) - sy;
   if (Math.abs(diff) < .3) return;
