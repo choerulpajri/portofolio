@@ -1,22 +1,70 @@
-/* Swarm cursor canvas */
-.swarm-cursors {
+/* Swarm Rebuild — portfolio intro */
+html.swarm-build-pending body {
+  background: #0f1432 !important;
+}
+html.swarm-build-pending body > :not(script) {
+  visibility: hidden !important;
+}
+html.swarm-build-active [data-swarm-hidden="true"] {
+  visibility: hidden !important;
+}
+.swarm-rebuild-agent {
   position: fixed;
-  inset: 0;
-  z-index: 1000;
-  width: 100%;
-  height: 100%;
+  z-index: 10001;
+  top: 0;
+  left: 0;
+  width: 22px;
+  height: 28px;
   pointer-events: none;
-  opacity: 0.88;
+  opacity: 0;
+  will-change: transform, opacity;
+  filter: drop-shadow(0 2px 5px rgba(0,0,0,.35));
 }
-
-@media (max-width: 700px) {
-  .swarm-cursors {
-    opacity: 0.55;
-  }
+.swarm-rebuild-agent::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--agent-color, #ffd23f);
+  clip-path: polygon(0 0, 0 100%, 30% 73%, 48% 100%, 61% 94%, 43% 67%, 82% 65%);
+  border: 1px solid rgba(255,255,255,.85);
 }
-
+.swarm-rebuild-agent::after {
+  content: attr(data-label);
+  position: absolute;
+  top: 22px;
+  left: 10px;
+  padding: 3px 6px;
+  border-radius: 4px;
+  color: #10152f;
+  background: var(--agent-color, #ffd23f);
+  font: 600 9px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace;
+  white-space: nowrap;
+}
+.swarm-rebuild-agent.is-active { opacity: 1; }
+.swarm-rebuild-agent.is-idle { opacity: .82; }
+.swarm-rebuild-status {
+  position: fixed;
+  z-index: 10002;
+  left: 50%;
+  bottom: 22px;
+  transform: translateX(-50%);
+  padding: 8px 13px;
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: 999px;
+  color: #f5f3ff;
+  background: rgba(15,20,50,.86);
+  box-shadow: 0 8px 30px rgba(0,0,0,.22);
+  font: 500 11px/1.3 ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: .04em;
+  pointer-events: none;
+  backdrop-filter: blur(10px);
+  transition: opacity .45s ease, transform .45s ease;
+}
+.swarm-rebuild-status.is-done {
+  opacity: 0;
+  transform: translate(-50%, 12px);
+}
 @media (prefers-reduced-motion: reduce), (pointer: coarse) {
-  .swarm-cursors {
-    display: none;
-  }
+  html.swarm-build-pending body > :not(script) { visibility: visible !important; }
+  .swarm-rebuild-agent, .swarm-rebuild-status { display: none !important; }
 }
