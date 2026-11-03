@@ -21,8 +21,8 @@ const SCROLL_MAX = 11;          // px per frame (maks. kecepatan auto-scroll)
 const SCROLL_EASE = .05;        // makin kecil = makin lembut
 
 const M = 16;
-const COLORS = ['#c4b5fd', '#7ee7c0', '#f0abfc', '#fcd34d', '#fb923c', '#60a5fa'];
-const LABEL = { shell: 'MEMBUAT BAGIAN', text: 'MENULIS TEKS', media: 'MENAMPILKAN GAMBAR', block: 'MEMBANGUN LAYOUT' };
+const COLORS = ['#c4b5fd', '#a78bfa', '#7ee7c0', '#e9d5ff', '#d8b4fe', '#f0abfc'];   /* keluarga ungu + mint, sama dengan tema situs */
+const LABEL = { shell: 'Membuat bagian', text: 'Menulis teks', media: 'Menampilkan gambar', block: 'Membangun layout' };
 const AGENTS = innerWidth < 700 ? 3 : 6;
 
 const UNIT_SEL = [
@@ -41,13 +41,13 @@ let totalUnits = 0, doneUnits = 0, head = 0, next = 0, rafId = 0;
 /* ---------- UI ---------- */
 const ui = (tag, cls) => { const n = document.createElement(tag); n.className = (cls ? cls + ' ' : '') + 'sw-ui'; return n; };
 const status = ui('div', 'sw-status');
-status.innerHTML = '<span class="sw-dot"></span><span class="sw-label">MENYIAPKAN</span><b class="sw-pct">0%</b><i class="sw-bar"><u></u></i>';
+status.innerHTML = '<span class="sw-dot"></span><span class="sw-label">Menyiapkan</span><b class="sw-pct">0%</b><i class="sw-bar"><u></u></i>';
 const label = status.querySelector('.sw-label');
 const pctEl = status.querySelector('.sw-pct');
 const barEl = status.querySelector('.sw-bar u');
 const skipBtn = ui('button', 'sw-skip');
 skipBtn.type = 'button';
-skipBtn.textContent = 'LEWATI ›';
+skipBtn.textContent = 'Lewati ›';
 skipBtn.setAttribute('aria-label', 'Lewati animasi pembuka');
 skipBtn.addEventListener('click', () => skip());
 
@@ -157,10 +157,11 @@ function linesOf(el, h) {
   return Math.max(1, Math.round(h / lh));
 }
 function shellName(el) {
-  if (el.tagName === 'NAV') return 'MENYUSUN · NAVIGASI';
-  if (el.tagName === 'HEADER') return 'MENYUSUN · HERO';
-  if (el.tagName === 'FOOTER') return 'MENYUSUN · FOOTER';
-  return 'MENYUSUN · ' + (el.id || 'BAGIAN').replace(/-/g, ' ').toUpperCase();
+  if (el.tagName === 'NAV') return 'Menyusun · Navigasi';
+  if (el.tagName === 'HEADER') return 'Menyusun · Hero';
+  if (el.tagName === 'FOOTER') return 'Menyusun · Footer';
+  const n = (el.id || 'bagian').replace(/-/g, ' ');
+  return 'Menyusun · ' + n.charAt(0).toUpperCase() + n.slice(1);
 }
 function prepare() {
   /* fase 1: hanya membaca (tanpa menulis) supaya layout tidak dihitung berulang */
@@ -343,7 +344,7 @@ function fail(e) { try { console.warn('swarm intro dihentikan:', e); } catch (_)
 async function finish() {
   following = false;
   doneUnits = totalUnits; setProgress();
-  label.textContent = 'SELESAI';
+  label.textContent = 'Selesai';
   await sleep(350);
   if (aborted) return;
   const y0 = scrollY;
