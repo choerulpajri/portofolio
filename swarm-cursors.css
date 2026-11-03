@@ -3,8 +3,8 @@
 html.swarm-build-pending,html.swarm-build-active{background:#090711!important}
 html.swarm-build-pending body,html.swarm-build-active body{background:transparent!important}
 html.swarm-build-pending body>:not(script):not(.sw-ui){visibility:hidden!important}
+html.swarm-build-pending body::before,html.swarm-build-active body::before{opacity:0}
 html.swarm-build-active .totop{visibility:hidden!important}
-html.swarm-build-active nav{-webkit-backdrop-filter:none!important;backdrop-filter:none!important;background:rgba(9,7,17,.97)!important}
 html.swarm-build-active .reveal{opacity:1;transform:none;transition:none}
 
 .sw-ui{pointer-events:none;--sw-body:var(--body,'Instrument Sans',system-ui,sans-serif);--sw-display:var(--display,'Bricolage Grotesque',system-ui,sans-serif)}
