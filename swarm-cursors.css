@@ -1,17 +1,58 @@
-html.swarm-build-pending body{background:#090711!important}
-html.swarm-build-pending body>:not(script){visibility:hidden!important}
-html.swarm-build-active [data-swarm-shell]{visibility:visible!important}
-.swarm-rebuild-agent{position:fixed;z-index:10020;top:0;left:0;width:19px;height:27px;pointer-events:none;opacity:0;will-change:transform;filter:drop-shadow(0 3px 8px rgba(0,0,0,.65))}
-.swarm-rebuild-agent::before{content:"";position:absolute;inset:0;background:var(--agent-color);clip-path:polygon(0 0,0 100%,28% 73%,47% 100%,61% 94%,43% 67%,88% 64%);border:1px solid rgba(255,255,255,.85);transition:transform .12s ease}
-.swarm-rebuild-agent::after{content:attr(data-label);position:absolute;top:25px;left:10px;padding:4px 7px;border:1px solid color-mix(in srgb,var(--agent-color),transparent 48%);border-radius:4px;background:#151020;color:var(--agent-color);font:700 8px/1.2 ui-monospace,monospace;letter-spacing:.08em;white-space:nowrap;box-shadow:0 4px 14px rgba(0,0,0,.3)}
-.swarm-rebuild-agent.is-active{opacity:1}
-.swarm-agent-ring{position:absolute;left:7px;top:8px;width:8px;height:8px;border:2px solid var(--agent-color);border-radius:50%;opacity:0;transform:scale(.4);pointer-events:none}
-.swarm-rebuild-agent.is-pressing::before{transform:scale(.84) rotate(-8deg);transform-origin:top left}
-.swarm-rebuild-agent.is-pressing .swarm-agent-ring{opacity:1;transform:scale(2.8);transition:transform .2s ease,opacity .12s ease;box-shadow:0 0 16px var(--agent-color)}
-.swarm-rebuild-status{position:fixed;z-index:10030;left:50%;bottom:22px;transform:translateX(-50%);display:flex;align-items:center;gap:10px;padding:10px 14px;border:1px solid rgba(196,181,253,.23);border-radius:8px;background:rgba(13,10,22,.94);color:#e9e0ff;box-shadow:0 12px 40px rgba(0,0,0,.4);backdrop-filter:blur(16px);font:600 9px/1.2 ui-monospace,monospace;letter-spacing:.1em;white-space:nowrap;pointer-events:none}
-.swarm-live-dot{width:7px;height:7px;border-radius:50%;background:#7ee7c0;box-shadow:0 0 12px #7ee7c0;animation:swarmPulse .8s infinite}
-.swarm-status-count{color:#c4b5fd;margin-left:8px;min-width:3ch;text-align:right}
-.swarm-rebuild-status.is-done{opacity:0;transform:translate(-50%,12px);transition:opacity .35s,transform .35s}
-@keyframes swarmPulse{50%{opacity:.35;transform:scale(.8)}}
-@media(max-width:600px){.swarm-rebuild-status{bottom:12px;font-size:8px;padding:9px 11px}.swarm-rebuild-agent::after{font-size:7px}}
-@media(prefers-reduced-motion:reduce),(pointer:coarse){html.swarm-build-pending body>:not(script){visibility:visible!important}.swarm-rebuild-agent,.swarm-rebuild-status{display:none!important}}
+/* Swarm Build v2 — layar gelap kosong, kursor menyusun halaman */
+html.swarm-build-pending,html.swarm-build-active{background:#07060d!important}
+html.swarm-build-pending body,html.swarm-build-active body{background:transparent!important}
+html.swarm-build-pending body>:not(script):not(.sw-ui){visibility:hidden!important}
+html.swarm-build-active .totop{visibility:hidden!important}
+html.swarm-build-active .reveal{opacity:1!important;transform:none!important;transition:none!important}
+
+.sw-ui{pointer-events:none}
+
+/* kursor */
+.sw-cursor{position:fixed;top:0;left:0;z-index:10020;width:20px;height:24px;opacity:0;transition:opacity .18s ease;will-change:transform}
+.sw-cursor.on{opacity:1}
+.sw-cursor svg{display:block;width:20px;height:24px;overflow:visible;filter:drop-shadow(0 3px 6px rgba(0,0,0,.55));transform-origin:2px 2px;transition:transform .09s ease}
+.sw-cursor path{fill:var(--c);stroke:#fff;stroke-width:1.4;stroke-linejoin:round}
+.sw-cursor.is-down svg{transform:scale(.8) rotate(-6deg)}
+.sw-tag{position:absolute;top:22px;left:12px;padding:3px 7px;border-radius:4px;background:var(--c);color:#0d0a16;font:700 8px/1.25 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.08em;white-space:nowrap;box-shadow:0 4px 12px rgba(0,0,0,.35)}
+
+/* bingkai seret (drag) */
+.sw-frame{position:fixed;top:0;left:0;z-index:10010;width:0;height:0;box-sizing:border-box;border:1.5px dashed var(--c);background:color-mix(in srgb,var(--c) 11%,transparent);opacity:0;transition:opacity .2s ease}
+.sw-frame.on{opacity:1}
+.sw-frame::before,.sw-frame::after{content:"";position:absolute;width:7px;height:7px;background:#fff;border:1.5px solid var(--c);box-sizing:border-box}
+.sw-frame::before{left:-4px;top:-4px}
+.sw-frame::after{right:-4px;bottom:-4px}
+.sw-frame.line{border:0;background:var(--c);box-shadow:0 0 18px var(--c),0 0 4px var(--c)}
+.sw-frame.line::before,.sw-frame.line::after{display:none}
+
+/* efek tekan */
+.sw-ripple{position:fixed;z-index:10015;width:30px;height:30px;border:2px solid var(--c);border-radius:50%;box-shadow:0 0 16px var(--c);transform:translate(-50%,-50%) scale(.2);opacity:0}
+
+/* indikator progres (persentase) */
+.sw-status{position:fixed;z-index:10030;left:50%;bottom:22px;transform:translate(-50%,10px);display:flex;align-items:center;gap:12px;padding:11px 16px 13px;border:1px solid rgba(196,181,253,.25);border-radius:10px;background:rgba(13,10,22,.92);color:#e9e0ff;box-shadow:0 12px 40px rgba(0,0,0,.45);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);font:600 9px/1.2 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.1em;white-space:nowrap;opacity:0;overflow:hidden;transition:opacity .3s ease,transform .3s ease}
+.sw-status.on{opacity:1;transform:translate(-50%,0)}
+.sw-status.done{opacity:0;transform:translate(-50%,10px)}
+.sw-dot{width:7px;height:7px;border-radius:50%;background:#7ee7c0;box-shadow:0 0 12px #7ee7c0;animation:swPulse .7s infinite}
+.sw-label{max-width:42vw;overflow:hidden;text-overflow:ellipsis}
+.sw-pct{min-width:4ch;text-align:right;color:#fff;font:800 20px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:0;font-variant-numeric:tabular-nums}
+.sw-bar{position:absolute;left:0;right:0;bottom:0;height:3px;background:rgba(196,181,253,.14)}
+.sw-bar u{display:block;height:100%;background:linear-gradient(90deg,#8b5cf6,#c4b5fd,#7ee7c0);transform-origin:left;transform:scaleX(0);text-decoration:none;transition:transform .12s linear}
+@keyframes swPulse{50%{opacity:.35;transform:scale(.8)}}
+
+/* tombol lewati */
+.sw-skip{position:fixed;z-index:10031;right:18px;bottom:22px;padding:9px 13px;border:1px solid rgba(196,181,253,.3);border-radius:8px;background:rgba(13,10,22,.92);color:#c4b5fd;font:700 10px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.08em;cursor:pointer;opacity:0;pointer-events:none;transition:opacity .3s ease}
+.sw-skip.on{opacity:1;pointer-events:auto}
+.sw-skip:hover,.sw-skip:focus-visible{background:#1d1530;color:#fff}
+
+@media(max-width:700px){
+  .sw-status{left:12px;bottom:12px;transform:translate(0,10px);gap:9px;padding:9px 12px 11px}
+  .sw-status.on{transform:none}
+  .sw-status.done{transform:translate(0,10px)}
+  .sw-pct{font-size:17px}
+  .sw-label{max-width:34vw}
+  .sw-skip{right:12px;bottom:12px;padding:8px 10px}
+  .sw-tag{font-size:7px}
+}
+@media(prefers-reduced-motion:reduce){
+  html.swarm-build-pending body>:not(script){visibility:visible!important}
+  .sw-ui{display:none!important}
+}
