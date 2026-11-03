@@ -16,14 +16,16 @@ const easeInOut = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 const linear = t => t;
 
 /* ---- pengaturan tempo (ms) ---- */
-const T = { move: 260, press: 90, block: 430, shell: 440, textBase: 260, flash: 170, stagger: 260, blank: 700 };
-const SCROLL_SPEED = 640;       // px/detik (batas kecepatan auto-scroll)
-const SCROLL_SMOOTH = 2.4;      // makin kecil = makin lembut
+const T = { move: 210, press: 65, block: 320, shell: 330, textBase: 200, flash: 140, stagger: 130, blank: 300 };
+const SCROLL_SPEED = 820;       // px/detik; intro lebih cepat mencapai elemen berikutnya
+const SCROLL_SMOOTH = 2.8;
+const LOW_POWER = (navigator.hardwareConcurrency || 4) <= 4 || (navigator.deviceMemory || 4) <= 4;
+const FX_SKIP = LOW_POWER ? 2 : 1; // efek canvas dirender lebih jarang pada perangkat terbatas
 
 const M = 16;
 const COLORS = ['#c4b5fd', '#a78bfa', '#7ee7c0', '#e9d5ff', '#d8b4fe', '#f0abfc'];   /* keluarga ungu + mint, sama dengan tema situs */
 const LABEL = { shell: 'Membuat bagian', text: 'Menulis teks', media: 'Menampilkan gambar', block: 'Membangun layout' };
-const AGENTS = innerWidth < 700 ? 3 : 6;
+const AGENTS = innerWidth < 700 ? 2 : (LOW_POWER ? 3 : 4);
 
 const UNIT_SEL = [
   'nav .brand', 'nav .roleswitch', 'nav .navlinks', 'nav .navtoggle',
@@ -97,7 +99,8 @@ function sizeFx() {
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 }
 function burst(x, y, c, n) {
-  for (let i = 0; i < n; i++) {
+  const count = Math.min(n, Math.max(0, 110 - particles.length));
+  for (let i = 0; i < count; i++) {
     const a = Math.random() * Math.PI * 2, v = 90 + Math.random() * 330;
     particles.push({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v, life: 0, max: .45 + Math.random() * .5, r: 1.2 + Math.random() * 2.6, c });
   }
@@ -134,7 +137,7 @@ function renderAgents(dt) {
     if (!a.visible) { if (a.trail.length) a.trail.length = 0; continue; }
     const last = a.trail[a.trail.length - 1];
     a.trail.push([a.x, a.y]);
-    if (a.trail.length > 14) a.trail.shift();
+    if (a.trail.length > 9) a.trail.shift();
     if (last && Math.abs(last[0] - a.x) + Math.abs(last[1] - a.y) < .8 && a.trail.length > 2) a.trail.shift();
   }
 }
@@ -168,7 +171,7 @@ function geo(it) {
   return it.fixed ? { l: it.l, t: it.t, w: it.w, h: it.h } : { l: it.l - scrollX, t: it.t - scrollY, w: it.w, h: it.h };
 }
 
-let last = 0, sy = 0;
+let last = 0, sy = 0, fxFrame = 0;
 function stepScroll(dt) {
   if (!following) return;
   while (head < jobs.length && jobs[head].done) head++;
@@ -197,7 +200,7 @@ function loop(now) {
       if (t >= 1) { tweens.delete(tw); tw.done(); }
     });
     renderAgents(dt);
-    drawFx(dt);
+    if ((fxFrame++ % FX_SKIP) === 0) drawFx(dt);
   } catch (e) { fail(e); return; }
   rafId = requestAnimationFrame(loop);
 }
