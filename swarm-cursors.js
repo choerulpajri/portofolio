@@ -234,7 +234,7 @@ function prepare() {
   const list = [document.querySelector('nav'), document.querySelector('.hero'), ...document.querySelectorAll('main > section'), document.querySelector('footer')]
     .filter(el => el && hasBox(el));
   list.forEach(el => {
-    const s = { el, name: shellName(el), promise: null, fixed: !!el.closest('nav'), transparent: /rgba\(0, 0, 0, 0\)|transparent/.test(getComputedStyle(el).backgroundColor) };
+    const s = { el, name: shellName(el), promise: null, fixed: !!el.closest('nav'), transparent: el.tagName !== 'NAV' && /rgba\(0, 0, 0, 0\)|transparent/.test(getComputedStyle(el).backgroundColor) };
     refresh(s);
     shells.push(s);
     collect(el).forEach(t => {
@@ -269,7 +269,7 @@ function paint(it, kind, p) {
   if (p >= 1) { el.style.clipPath = ''; el.style.opacity = ''; el.style.translate = ''; el.style.scale = ''; return; }
   const m = kind === 'shell' ? 0 : M;
   let clip;
-  if (kind === 'shell') clip = 'inset(0px 0px ' + (h - p * h).toFixed(1) + 'px 0px)';
+  if (kind === 'shell') clip = 'inset(-24px -12px ' + ((h + 24) * (1 - p)).toFixed(1) + 'px -12px)';
   else if (kind === 'text' && it.lines > 1) {
     /* efek mengetik: baris demi baris, kiri ke kanan */
     const L = it.lines, lh = h / L, lp = p * L, k = Math.min(L - 1, Math.floor(lp)), f = lp - k;
