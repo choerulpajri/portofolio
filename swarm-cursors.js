@@ -16,9 +16,9 @@ const easeInOut = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 const linear = t => t;
 
 /* ---- pengaturan tempo (ms) ---- */
-const T = { move: 240, press: 90, block: 430, shell: 480, textBase: 260, flash: 170, stagger: 260, blank: 700 };
-const SCROLL_MAX = 11;          // px per frame (maks. kecepatan auto-scroll)
-const SCROLL_EASE = .05;        // makin kecil = makin lembut
+const T = { move: 260, press: 90, block: 430, shell: 440, textBase: 260, flash: 170, stagger: 260, blank: 700 };
+const SCROLL_SPEED = 640;       // px/detik (batas kecepatan auto-scroll)
+const SCROLL_SMOOTH = 2.4;      // makin kecil = makin lembut
 
 const M = 16;
 const COLORS = ['#c4b5fd', '#a78bfa', '#7ee7c0', '#e9d5ff', '#d8b4fe', '#f0abfc'];   /* keluarga ungu + mint, sama dengan tema situs */
@@ -69,8 +69,8 @@ function makeAgent(i) {
   frame.innerHTML = '<em class="sw-dim"></em>';
   const dim = frame.firstChild;
   const a = {
-    color: c, node, frame, dim, tok: 0, dir: i % 2 ? 1 : -1, tag: node.querySelector('.sw-tag'), x: 0, y: 0,
-    place(x, y) { a.x = x; a.y = y; node.style.transform = 'translate3d(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px,0)'; },
+    color: c, node, frame, dim, tok: 0, dir: i % 2 ? 1 : -1, tag: node.querySelector('.sw-tag'), x: 0, y: 0, px: 0, vx: 0, trail: [], visible: false,
+    place(x, y) { a.x = x; a.y = y; },
     say(t) { a.tag.textContent = t; },
     down(b) { node.classList.toggle('is-down', b); },
     rect(x, y, w, h, showDim) {
@@ -80,8 +80,63 @@ function makeAgent(i) {
       if (showDim) dim.textContent = Math.round(w) + ' × ' + Math.round(h);
     }
   };
-  a.place(innerWidth * (.1 + .16 * i), -40);
+  const E = [[-50, .30], [1.04, .18], [.5, -.08], [-50, .78], [1.04, .72], [.32, 1.08]][i % 6];
+  a.place(E[0] < 0 ? E[0] : innerWidth * E[0], innerHeight * E[1]);
+  if (E[0] >= 0) a.place(innerWidth * E[0], innerHeight * E[1]);
+  a.px = a.x;
   return a;
+}
+
+/* ---------- efek: jejak kursor + percikan (satu canvas, murah) ---------- */
+let fx = null, ctx = null, FW = 0, FH = 0;
+const particles = [];
+function sizeFx() {
+  const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+  FW = innerWidth; FH = innerHeight;
+  fx.width = Math.round(FW * dpr); fx.height = Math.round(FH * dpr);
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+function burst(x, y, c, n) {
+  for (let i = 0; i < n; i++) {
+    const a = Math.random() * Math.PI * 2, v = 90 + Math.random() * 330;
+    particles.push({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v, life: 0, max: .45 + Math.random() * .5, r: 1.2 + Math.random() * 2.6, c });
+  }
+}
+function drawFx(dt) {
+  ctx.clearRect(0, 0, FW, FH);
+  ctx.globalCompositeOperation = 'lighter';
+  ctx.lineCap = 'round';
+  for (const a of agents) {
+    const tr = a.trail;
+    if (tr.length < 2) continue;
+    ctx.strokeStyle = a.color;
+    for (let i = 1; i < tr.length; i++) {
+      const k = i / tr.length;
+      ctx.globalAlpha = k * k * .55; ctx.lineWidth = 1 + k * 5;
+      ctx.beginPath(); ctx.moveTo(tr[i - 1][0], tr[i - 1][1]); ctx.lineTo(tr[i][0], tr[i][1]); ctx.stroke();
+    }
+  }
+  for (let i = particles.length - 1; i >= 0; i--) {
+    const q = particles[i];
+    q.life += dt;
+    if (q.life >= q.max) { particles.splice(i, 1); continue; }
+    q.x += q.vx * dt; q.y += q.vy * dt; q.vx *= .955; q.vy = q.vy * .955 + 90 * dt;
+    ctx.globalAlpha = (1 - q.life / q.max) * .9; ctx.fillStyle = q.c;
+    ctx.beginPath(); ctx.arc(q.x, q.y, q.r * (1 - q.life / q.max * .5), 0, 6.2832); ctx.fill();
+  }
+  ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
+}
+function renderAgents(dt) {
+  for (const a of agents) {
+    a.vx = lerp(a.vx, (a.x - a.px) / dt, .22); a.px = a.x;
+    const ang = clamp(a.vx * .005, -14, 14);
+    a.node.style.transform = 'translate3d(' + a.x.toFixed(1) + 'px,' + a.y.toFixed(1) + 'px,0) rotate(' + ang.toFixed(1) + 'deg)';
+    if (!a.visible) { if (a.trail.length) a.trail.length = 0; continue; }
+    const last = a.trail[a.trail.length - 1];
+    a.trail.push([a.x, a.y]);
+    if (a.trail.length > 14) a.trail.shift();
+    if (last && Math.abs(last[0] - a.x) + Math.abs(last[1] - a.y) < .8 && a.trail.length > 2) a.trail.shift();
+  }
 }
 
 function ripple(x, y, c, big) {
@@ -113,29 +168,36 @@ function geo(it) {
   return it.fixed ? { l: it.l, t: it.t, w: it.w, h: it.h } : { l: it.l - scrollX, t: it.t - scrollY, w: it.w, h: it.h };
 }
 
-function stepScroll() {
+let last = 0, sy = 0;
+function stepScroll(dt) {
   if (!following) return;
   while (head < jobs.length && jobs[head].done) head++;
   const j = jobs[head];
   if (!j) return;
+  if (Math.abs(scrollY - sy) > 3) sy = scrollY;
   const max = Math.max(0, root.scrollHeight - innerHeight);
   const top = geo(j).t;
   const anchor = innerHeight * .3;
   if (top <= anchor) return;
-  const diff = clamp(scrollY + top - anchor, 0, max) - scrollY;
-  if (Math.abs(diff) < .5) return;
-  const step = Math.sign(diff) * Math.min(Math.abs(diff), Math.max(.8, Math.min(SCROLL_MAX, Math.abs(diff) * SCROLL_EASE)));
-  window.scrollTo(0, scrollY + step);
+  const diff = clamp(scrollY + top - anchor, 0, max) - sy;
+  if (Math.abs(diff) < .3) return;
+  const cap = SCROLL_SPEED * dt;
+  sy += clamp(diff * (1 - Math.exp(-dt * SCROLL_SMOOTH)), -cap, cap);
+  window.scrollTo(0, sy);
 }
 function loop(now) {
   if (cleaned) return;
+  const dt = last ? clamp((now - last) / 1000, .001, .05) : .016;
+  last = now;
   try {
-    stepScroll();
+    stepScroll(dt);
     tweens.forEach(tw => {
       const t = clamp((now - tw.start) / tw.dur, 0, 1);
       tw.fn(tw.ease(t));
       if (t >= 1) { tweens.delete(tw); tw.done(); }
     });
+    renderAgents(dt);
+    drawFx(dt);
   } catch (e) { fail(e); return; }
   rafId = requestAnimationFrame(loop);
 }
@@ -201,7 +263,7 @@ function startPt(it, kind) {
 }
 function paint(it, kind, p) {
   const el = it.el, w = it.w, h = it.h;
-  if (p >= 1) { el.style.clipPath = ''; if (kind === 'media') el.style.opacity = ''; return; }
+  if (p >= 1) { el.style.clipPath = ''; el.style.opacity = ''; el.style.translate = ''; el.style.scale = ''; return; }
   const m = kind === 'shell' ? 0 : M;
   let clip;
   if (kind === 'shell') clip = 'inset(0px 0px ' + (h - p * h).toFixed(1) + 'px 0px)';
@@ -214,14 +276,14 @@ function paint(it, kind, p) {
   else if (kind === 'text') clip = 'inset(' + (-m) + 'px ' + (w + m - p * (w + 2 * m)).toFixed(1) + 'px ' + (-m) + 'px ' + (-m) + 'px)';
   else clip = 'inset(' + (-m) + 'px ' + (w + m - p * (w + 2 * m)).toFixed(1) + 'px ' + (h + m - p * (h + 2 * m)).toFixed(1) + 'px ' + (-m) + 'px)';
   el.style.clipPath = clip;
-  if (kind === 'media') el.style.opacity = (.35 + .65 * p).toFixed(2);
+  if (kind === 'media') { el.style.opacity = (.35 + .65 * p).toFixed(2); el.style.scale = (.94 + .06 * p).toFixed(3); }
+  if (kind !== 'shell' && kind !== 'text') el.style.translate = '0 ' + ((1 - p) * 14).toFixed(1) + 'px';
 }
 
 /* ---------- satu aksi: gerak melengkung -> tekan -> seret (+ isi muncul) -> lepas ---------- */
 async function build(agent, it, kind) {
   const el = it.el;
   agent.say(LABEL[kind]);
-  refresh(it);
   const from = [agent.x, agent.y];
   const tok = ++agent.tok;
   const arcDir = agent.dir = -agent.dir;
@@ -234,6 +296,7 @@ async function build(agent, it, kind) {
   if (aborted) return;
 
   el.style.transition = 'none';
+  if (kind !== 'shell') el.style.willChange = 'transform, clip-path';
   paint(it, kind, 0);
   el.style.visibility = kind === 'shell' ? 'visible' : '';
   const g0 = geo(it), s0 = startPt(it, kind);
@@ -266,8 +329,12 @@ async function build(agent, it, kind) {
 
   agent.down(false);
   ripple(agent.x, agent.y, agent.color, true);
-  el.style.clipPath = ''; el.style.filter = ''; el.style.opacity = ''; el.style.transition = '';
+  el.style.clipPath = ''; el.style.filter = ''; el.style.opacity = ''; el.style.transition = ''; el.style.translate = ''; el.style.scale = ''; el.style.willChange = '';
   if (kind !== 'shell') el.style.visibility = '';
+  burst(agent.x, agent.y, agent.color, kind === 'shell' ? 14 : 8);
+  if ((kind === 'block' || kind === 'media') && it.w * it.h < 600000 && el.animate) {
+    try { el.animate([{ scale: 1.014 }, { scale: 1 }], { duration: 280, easing: 'cubic-bezier(.2,.8,.2,1)' }); } catch (_) {}
+  }
   if (kind !== 'shell' && kind !== 'text') {
     const g = geo(it);
     agent.rect(g.l, g.t, g.w, g.h, true);
@@ -297,7 +364,7 @@ async function waitInView(it) {
 async function worker(agent, i) {
   await sleep(i * T.stagger);
   if (aborted) return;
-  agent.node.classList.add('on');
+  agent.node.classList.add('on'); agent.visible = true;
   while (!aborted && next < jobs.length) {
     const job = jobs[next++];
     await ensureShell(job.shell, agent);
@@ -312,6 +379,11 @@ async function worker(agent, i) {
 /* ---------- selesai / lewati / bersih-bersih ---------- */
 const lockKeys = ['ArrowDown', 'ArrowUp', 'PageDown', 'PageUp', 'Home', 'End', ' '];
 const blockScroll = e => { e.preventDefault(); };
+let resizeT = 0;
+const onResize = () => {
+  clearTimeout(resizeT);
+  resizeT = setTimeout(() => { if (cleaned) return; sizeFx(); jobs.forEach(j => { if (!j.done) refresh(j); }); shells.forEach(s => { if (!s.promise) refresh(s); }); }, 150);
+};
 const onKey = e => {
   if (e.key === 'Escape') { skip(); return; }
   if (lockKeys.indexOf(e.key) > -1 && e.target !== skipBtn) e.preventDefault();
@@ -328,6 +400,8 @@ function cleanup() {
   });
   document.querySelectorAll('.reveal').forEach(el => el.classList.add('in'));
   agents.forEach(a => { a.node.remove(); a.frame.remove(); });
+  if (fx) fx.remove();
+  removeEventListener('resize', onResize);
   document.querySelectorAll('.sw-ripple').forEach(n => n.remove());
   status.remove(); skipBtn.remove();
   root.style.scrollBehavior = '';
@@ -345,17 +419,25 @@ async function finish() {
   following = false;
   doneUnits = totalUnits; setProgress();
   label.textContent = 'Selesai';
-  await sleep(350);
+  await sleep(300);
   if (aborted) return;
-  const y0 = scrollY;
-  if (y0 > 2) {
-    const dur = clamp(600 + y0 * .12, 900, 1800);
-    await tween(dur, easeInOut, t => window.scrollTo(0, y0 * (1 - t)));
-  }
+  const y0 = scrollY, cx = innerWidth / 2, cy = innerHeight * .46;
+  const from = agents.map(a => [a.x, a.y]);
+  const dur = clamp(1100 + y0 * .12, 1300, 2200);
+  await tween(dur, easeInOut, t => {
+    window.scrollTo(0, y0 * (1 - t));
+    const m = easeOut(Math.min(1, t * 1.5)), r = lerp(190, 0, easeInOut(t));
+    agents.forEach((a, i) => {
+      const ang = i / agents.length * Math.PI * 2 + t * Math.PI * 2.2;
+      a.place(lerp(from[i][0], cx + Math.cos(ang) * r, m), lerp(from[i][1], cy + Math.sin(ang) * r * .75, m));
+    });
+  });
   if (aborted) return;
-  agents.forEach(a => { a.down(false); a.node.classList.remove('on'); a.frame.classList.remove('on', 'flash'); });
+  agents.forEach(a => { a.down(false); burst(a.x, a.y, a.color, 30); a.node.classList.remove('on'); a.visible = false; a.frame.classList.remove('on', 'flash'); });
+  ripple(cx, cy, '#c4b5fd', true);
+  setTimeout(() => ripple(cx, cy, '#a78bfa', true), 120);
   status.classList.add('done'); skipBtn.classList.remove('on');
-  await sleep(450);
+  await sleep(1000);
   cleanup();
 }
 
@@ -377,8 +459,11 @@ async function run() {
   prepare();
   root.classList.add('swarm-build-active');
   root.classList.remove('swarm-build-pending');       // semua sudah disembunyikan inline -> layar tetap kosong & gelap
+  fx = ui('canvas', 'sw-fx'); fx.setAttribute('aria-hidden', 'true'); ctx = fx.getContext('2d'); sizeFx();
+  document.body.appendChild(fx);
   document.body.appendChild(status);
   document.body.appendChild(skipBtn);
+  addEventListener('resize', onResize);
   for (let i = 0; i < AGENTS; i++) { const a = makeAgent(i); agents.push(a); document.body.append(a.frame, a.node); }
   addEventListener('wheel', blockScroll, { passive: false });
   addEventListener('touchmove', blockScroll, { passive: false });
