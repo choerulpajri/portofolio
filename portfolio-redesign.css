@@ -63,3 +63,50 @@ a,button{-webkit-tap-highlight-color:transparent}
   html{scroll-behavior:auto}
   *,*::before,*::after{scroll-behavior:auto!important;transition-duration:.01ms!important;animation-duration:.01ms!important;animation-iteration-count:1!important}
 }
+
+/* Compact layout: kurangi ruang kosong vertikal tanpa membuat konten sesak */
+section{padding:72px 0}
+.hero{padding:76px 0 78px}
+.hero .wrap{gap:42px}
+.rolepick{margin-bottom:24px}
+.hero-sub{margin-top:20px}
+.hero-btns{margin-top:22px}
+.avail{margin-top:16px}
+.recruiter{padding:48px 0 54px}
+.rc-grid{margin-top:22px}
+.rc-card{padding:19px}
+.about{padding:64px 0}
+.about .wrap{gap:48px}
+.skills{padding:64px 0}
+.sk-legend{margin:16px 0 22px}
+.skillgrid{margin-top:22px}
+.skill-card{padding:20px}
+.projects{padding:64px 0}
+.projects h2{margin-bottom:30px}
+.project{padding:38px 0}
+.project .p-visual{align-self:center}
+.dashboards{padding:64px 0}
+.dash-guide{margin:18px 0 22px}
+.process{padding:64px 0}
+.flow{margin-top:34px;gap:34px}
+.contact{padding:72px 0}
+.contact-links{margin-top:24px}
+@media(max-width:900px){
+  .hero{padding:64px 0 62px}
+  .hero .wrap{gap:26px}
+  .about .wrap{gap:30px}
+}
+@media(max-width:620px){
+  section{padding:52px 0}
+  .hero{padding:48px 0 50px}
+  .hero .wrap{gap:22px}
+  .hero-sub{margin-top:16px}
+  .hero-btns{margin-top:18px}
+  .recruiter,.about,.skills,.projects,.dashboards,.process,.contact{padding:50px 0}
+  .rc-grid,.skillgrid{margin-top:18px}
+  .rc-card,.skill-card{padding:17px}
+  .projects h2{margin-bottom:22px}
+  .project{padding:28px 0;gap:22px}
+  .flow{margin-top:24px;gap:22px}
+  .contact-links{margin-top:18px}
+}
