@@ -446,12 +446,13 @@ async function finish() {
 
 /* tunggu halaman benar-benar siap (font, gambar, grafik) agar animasi tidak patah di awal */
 async function ready() {
-  const cap = new Promise(r => setTimeout(r, 2500));
-  const loaded = document.readyState === 'complete' ? Promise.resolve() : new Promise(r => addEventListener('load', r, { once: true }));
+  /* Script memakai defer, jadi DOM sudah siap. Jangan menunggu seluruh gambar/CDN:
+     ukuran foto sudah ditetapkan dan dashboard dimuat terpisah saat dibutuhkan. */
+  const cap = new Promise(r => setTimeout(r, 900));
   const fonts = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
-  await Promise.race([Promise.all([loaded, fonts]), cap]);
+  await Promise.race([fonts, cap]);
   await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
-  await sleep(250);
+  await sleep(80);
 }
 
 async function run() {
