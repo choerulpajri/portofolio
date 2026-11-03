@@ -210,3 +210,57 @@ body>footer{padding:26px 0;border-radius:20px;color:var(--st-mute);font-size:14p
   .facts div{grid-template-columns:1fr;gap:2px}
 }
 @media(prefers-reduced-motion:reduce){body::before{transition:none}}
+
+
+/* Visual refinement v4: brighter surfaces, clearer section contrast and links */
+:root{
+  --st-canvas:#100d19;
+  --st-frame:#171323;
+  --st-raise:#211a30;
+  --st-raise-2:#2a2140;
+  --st-line:rgba(210,194,255,.23);
+  --st-line-2:rgba(210,194,255,.38);
+  --st-text:#fbf9ff;
+  --st-mute:#c0b6d2;
+}
+body{color:#f5f1fc}
+body::before{
+  background:
+    radial-gradient(900px 620px at 88% -6%,rgba(139,92,246,.22),transparent 62%),
+    radial-gradient(760px 520px at -4% 46%,rgba(91,33,182,.17),transparent 62%),
+    radial-gradient(rgba(210,194,255,.13) 1px,transparent 1.35px) 0 0/28px 28px;
+}
+header.hero,main>section,body>footer{border-color:rgba(210,194,255,.24)!important}
+.recruiter,.skills,.about,.projects{background:#171323!important}
+.recruiter{background:linear-gradient(145deg,#1b1629,#171323)!important}
+.process{background:linear-gradient(145deg,#1d1730,#171323)!important}
+.dashboards{background:#141020!important}
+.rc-card,.skill-card{
+  background:linear-gradient(145deg,#29213b,#211a30);
+  border-color:rgba(210,194,255,.24);
+}
+.rc-list,.about p,.facts dd,.skill-card .sk-plain,.skill-card .sk-proof,.project p,.hl span,.panels p{
+  color:#d0c7df;
+}
+.rc-label,.facts dt,.role,.project .role{color:#d2c2ff!important}
+.skill-card h3,.rc-big,.project h3,.panels h3{color:#fff}
+.sk-tools li{background:rgba(167,139,250,.17);border-color:rgba(210,194,255,.25);color:#f0eaff}
+.sk-tools li.lv-learn{background:rgba(255,255,255,.07);color:#d7cfe3}
+.sk-tools li.lv-now{background:rgba(126,231,192,.13);color:#b9f3dc}
+.sk-proof a,.skill-card a{
+  color:#d7c8ff;
+  text-decoration:underline;
+  text-decoration-color:rgba(215,200,255,.55);
+  text-underline-offset:3px;
+  font-weight:600;
+}
+.sk-proof a:hover,.skill-card a:hover{color:#fff;text-decoration-color:#fff}
+.win{background:#211a30;border-color:rgba(210,194,255,.3);box-shadow:0 18px 44px rgba(0,0,0,.28)}
+.win-bar{background:#302644;color:#e0d7ed}
+.steps button{background:rgba(255,255,255,.07);border-color:rgba(210,194,255,.24)}
+.steps button:hover{background:rgba(196,181,253,.16)}
+.panels{background:#211a30;border-color:rgba(210,194,255,.28)}
+.dash-panel,.dash-kpi,.dash-insight{border-color:rgba(210,194,255,.25)!important}
+.contact{background:radial-gradient(ellipse at 75% 35%,rgba(139,92,246,.3),transparent 40%),#171323!important}
+nav .wrap{background:rgba(24,19,36,.97);border-color:rgba(210,194,255,.3)}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
